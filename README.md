@@ -1,66 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projeto Backend - Gerenciamento de Livros
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto é parte de um desafio Fullstack da empresa IBL Logística. O backend foi desenvolvido utilizando PHP e Laravel, com foco em funcionalidades para o gerenciamento de livros, como criar, editar, excluir e listar.
 
-## About Laravel
+# Requisitos Funcionais (RF)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Cadastro de Livro
+- [x] Deve ser possível cadastrar um novo livro com as seguintes informações:
+  - [x] Título
+  - [x] Autor
+  - [x] ISBN
+  - [x] Quantidade de Páginas
+  - [x] Edição
+  - [x] Editora
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Atualização de Livro
+- [x] Deve ser possível atualizar as informações de um livro cadastrado.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Exclusão de Livro
+- [x] Deve ser possível excluir um livro cadastrado.
 
-## Learning Laravel
+### Listagem de Livros
+- [x] Deve ser possível listar todos os livros cadastrados.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Visualização de Livro Individual
+- [x] Deve ser possível visualizar os detalhes de um livro específico.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Regras de Negócio (RN)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Restrição de Acesso a Livros
+- [x] O usuário só pode visualizar, editar e apagar os livros que ele criou.
 
-## Laravel Sponsors
+# Regras de Negócio (RN)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Restrição de Acesso a Livros
+- [x] O usuário só pode visualizar, editar e apagar os livros que ele criou.
 
-### Premium Partners
+## Instalação
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+# Clone o repositório
+git clone git@github.com:gabrielgxrcia/backend-ibl-logistica.git
 
-## Contributing
+# Instale as dependências do projeto
+composer install
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Crie o arquivo .env a partir do exemplo
+cp .env.example .env
 
-## Code of Conduct
+# Gera a chave da aplicação Laravel
+php artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Execute as migrations para criar o banco de dados
+php artisan migrate
 
-## Security Vulnerabilities
+# Execute o servidor de desenvolvimento
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Documentação e rotas
+- Criar novo livro
 
-## License
+```http
+  POST api/books
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `titulo` | `Body - String` | **Obrigatório**. Título do livro. |
+| `autor` | `Body - String` | **Obrigatório**. Autor do livro. |
+| `isbn` | `Body - String` | **Obrigatório**. ISBN do livro. |
+| `quantidade_paginas` | `Body - Integer` | **Obrigatório**. Quantidade de páginas do livro. |
+| `edicao` | `Body - String` | **Obrigatório**. Edição do livro. |
+| `editora` | `Body - String` | **Obrigatório**. Editora do livro. |
+
+- Listar todos os livros
+
+```http
+  GET api/books
+```
+
+ - Visualizar um livro específico
+
+ ```http
+  GET api/books/{id}
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `Path Parameter` | **Obrigatório**. ID do livro a ser consultado. |
+
+- Atualizar um livro
+
+```http
+  PUT api/books/{id}
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `Path Parameter` | **Obrigatório**. ID do livro a ser editado. |
+| `titulo` | `Body - String` | **Opcional**. Novo título do livro. |
+| `autor` | `Body - String` | **Opcional**. Novo autor do livro. |
+| `isbn` | `Body - String` | **Opcional**. Novo ISBN do livro. |
+| `quantidade_paginas` | `Body - Integer` | **Opcional**. Nova quantidade de páginas do livro. |
+| `edicao` | `Body - String` | **Opcional**. Nova edição do livro. |
+| `editora` | `Body - String` | **Opcional**. Nova editora do livro. |
+
+
+- Excluir um livro
+
+```http
+  DELETE api/books/{id}
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `Path Parameter` | **Obrigatório**. ID do livro a ser excluído. |
+
+- Pesquisar livros por parâmetros
+
+```http
+  GET /api/search?query=
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `query` | `Query Param` | **Opcional**. Termo de busca (título, autor, ISBN). |
+
+## Testes 
+  - [x] Deve ser possível criar um novo livro.
+  - [x] Deve ser possível visualizar se falhou ao criar um novo livro.
+  - [x] Deve ser possível listar um livro.
+
+- Executar testes
+```bash
+# Após a instalação do projeto e suas depêndencias:
+  vendor/bin/phpunit
+```
