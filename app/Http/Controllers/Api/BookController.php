@@ -3,88 +3,80 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBookRequest;
-use App\Http\Requests\UpdateBookRequest;
-use App\Http\Requests\SearchBookRequest;
+use App\Http\Requests\Book\StoreBookRequest;
+use App\Http\Requests\Book\UpdateBookRequest;
+use App\Http\Requests\Book\SearchBookRequest;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Services\Book\BookService;
+use App\Services\Book\ResponseService;
+use App\Traits\ExceptionHandlerTrait;
 
 class BookController extends Controller
 {
-    // Retorna todos os livros.
+    // Usar o trait para tratamento de exceções
+    use ExceptionHandlerTrait; 
+
+    // Serviço de livro
+    protected $bookService;
+
+    // Construtor para injeção de dependência
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
+    // Listar todos os livros
     public function index(): JsonResponse
     {
-        return response()->json(Book::all());
+        return $this->tryCatch(function () {
+            $books = $this->bookService->getAllBooks();
+            return ResponseService::success($books);
+        });
     }
 
-    // Cria um novo livro.
+    // Criar um novo livro
     public function store(StoreBookRequest $request): JsonResponse
-{
-    try {
-        $book = Book::create($request->validated());
-        return response()->json($book, 201);
-    } catch (\Illuminate\Database\QueryException $e) {
-        if ($e->getCode() == 23000) { 
-            return response()->json(['message' => 'ISBN já cadastrado.'], 409);
-        }
-        return response()->json(['message' => 'Erro ao criar o livro.', 'error' => $e->getMessage()], 500);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Erro ao criar o livro.', 'error' => $e->getMessage()], 500);
+    {
+        return $this->tryCatch(function () use ($request) {
+            $book = $this->bookService->createBook($request->validated());
+            return ResponseService::success($book, 201);
+        });
     }
-}
 
-    // Retorna um livro específico.
+    // Exibir um livro específico por ID
     public function show($id): JsonResponse
     {
-        try {
-            $book = Book::findOrFail($id);
-            return response()->json($book);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Livro não encontrado.'], 404);
-        }
+        return $this->tryCatch(function () use ($id) {
+            $book = $this->bookService->getBookById($id);
+            return ResponseService::success($book);
+        });
     }
 
-    // Atualiza um livro específico.
+    // Atualizar um livro existente ou específico por ID
     public function update(UpdateBookRequest $request, $id): JsonResponse
     {
-        try {
-            $book = Book::findOrFail($id);
-            $book->update($request->validated());
-            return response()->json($book);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Livro não encontrado.'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao atualizar o livro.'], 500);
-        }
+        return $this->tryCatch(function () use ($request, $id) {
+            $book = $this->bookService->updateBook($id, $request->validated());
+            return ResponseService::success($book);
+        });
     }
 
-    // Exclui um livro.
+    // Deletar livro
     public function destroy($id): JsonResponse
     {
-        try {
-            $book = Book::findOrFail($id);
-            $book->delete();
-            return response()->json(null, 204);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Livro não encontrado.'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao excluir o livro.'], 500);
-        }
+        return $this->tryCatch(function () use ($id) {
+            $this->bookService->deleteBook($id);
+            return ResponseService::success(null, 204);
+        });
     }
 
-    // Busca livros com base em uma consulta.
+    // Buscar livros por parâmetro
     public function search(SearchBookRequest $request): JsonResponse
     {
-        $query = $request->input('query');
-        $books = Book::where(function ($queryBuilder) use ($query) {
-            $queryBuilder->where('titulo', 'like', "%$query%")
-                ->orWhere('autor', 'like', "%$query%")
-                ->orWhere('isbn', 'like', "%$query%")
-                ->orWhere('edicao', 'like', "%$query%")
-                ->orWhere('editora', 'like', "%$query%");
-        })->get();
-
-        return response()->json($books);
+        return $this->tryCatch(function () use ($request) {
+            $books = $this->bookService->searchBooks($request->input('query'));
+            return ResponseService::success($books);
+        });
     }
 }
