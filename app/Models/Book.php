@@ -16,5 +16,6 @@ class Book extends Model
         'quantidade_paginas',
         'edicao',
         'editora',
+        'image',
     ];
 }

@@ -25,6 +25,7 @@ class UpdateBookRequest extends FormRequest
             'quantidade_paginas' => 'sometimes|required|integer',
             'edicao' => 'sometimes|required|string|max:20',
             'editora' => 'sometimes|required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 

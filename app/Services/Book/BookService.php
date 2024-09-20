@@ -44,6 +44,8 @@ class BookService
 {
     $books = Book::where('titulo', 'like', '%' . $query . '%')
         ->orWhere('autor', 'like', '%' . $query . '%')
+        ->orWhere('isbn', 'like', '%' . $query . '%')
+        ->orWhere('editora', 'like', '%' . $query . '%')
         ->get();
 
     if ($books->isEmpty()) {

@@ -25,6 +25,7 @@ class StoreBookRequest extends FormRequest
             'quantidade_paginas' => 'required|integer',
             'edicao' => 'required|string|max:255',
             'editora' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 

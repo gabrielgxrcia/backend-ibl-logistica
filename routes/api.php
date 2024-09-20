@@ -10,6 +10,7 @@ Route::prefix('books')->group(function () {
     Route::get('/{id}', [BookController::class, 'show'])->name('Book.show'); 
     Route::put('/{id}', [BookController::class, 'update'])->name('Book.update'); 
     Route::delete('/{id}', [BookController::class, 'destroy'])->name('Book.destroy'); 
+    Route::get('/api/search', [BookController::class, 'search'])->name('Book.search');
 });
 
 // Rota para pesquisar livros

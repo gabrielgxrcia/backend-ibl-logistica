@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use App\Services\Book\BookService;
 use App\Services\Book\ResponseService;
 use App\Traits\ExceptionHandlerTrait;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
@@ -39,7 +40,19 @@ class BookController extends Controller
     public function store(StoreBookRequest $request): JsonResponse
     {
         return $this->tryCatch(function () use ($request) {
-            $book = $this->bookService->createBook($request->validated());
+            $imagePath = null;
+            if($request ->  hasFile('image')) {
+                $file = $request -> file('image');
+                $filename = $file -> getClientOriginalName();
+                $finalName = date('His') . $filename;
+                $request -> file('image') -> storeAs('images/', $finalName, 'public');
+                $imagePath = 'images/' . $finalName;
+            }
+
+            $data = $request -> validated();
+            $data['image'] = $imagePath;
+
+            $book = $this->bookService->createBook($data);
             return ResponseService::success($book, 201);
         });
     }
